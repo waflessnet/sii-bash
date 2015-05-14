@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:def="http://DefaultNamespace">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <def:getToken soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <pszXml xsi:type="xsd:string">?</pszXml>
+      </def:getToken>
+   </soapenv:Body>
+</soapenv:Envelope>
