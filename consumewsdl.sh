@@ -1,6 +1,6 @@
 #!/bin/bash
 # Autor : Francisco Céspedes
-# corremo : ncwapuntes@gmail.com / francisco@twpanel.com
+# correo : ncwapuntes@gmail.com / francisco@twpanel.com
 # 
 # Este script permite conectarse a los WSDL autenticacion del SII y obtener el token de acceso
 # Modo de uso: 
@@ -82,10 +82,10 @@ sed -i '79s|<\/getToken>|<\/getToken>\]\]><\/pszXml>|' tmp/semilla-firmada.xml
 #llamamos el wsdl para obtener el token
 curl -s -X POST -H 'Content-Type: text/xml;charset=UTF-8' --data-binary @tmp/request-token.xml  -H "${SOAPAction_TOKEN}"  ${URL_TOKEN} | recode html..ascii >  tmp/token-xml.xml
 
-ESTADO=$(cat tmp/token-xml.xml | awk -F">" '/ESTADO/{printf $2 }'  | sed 's|</ESTADO||' )
+ESTADO=$(cat tmp/token-xml.xml | grep -oP '(?<=<ESTADO>).*?(?=</ESTADO>)')
 if [ "$ESTADO" != "00" ]; then
 	echo "Error:5 error al crear el token estado:"$ESTADO
 	exit;
 fi
 #retornamos el token
-cat tmp/token-xml.xml | awk -F">" '/TOKEN/{printf $2 }'  | sed 's|</TOKEN||'
+cat tmp/token-xml.xml | grep -oP '(?<=<TOKEN>).*?(?=</TOKEN>)'
