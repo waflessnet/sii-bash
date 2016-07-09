@@ -74,7 +74,7 @@ sed 's/<Semilla>.*<\/Semilla>/<Semilla>'$SEMILLA'<\/Semilla>/g' template.xml > t
 xmlsec1 --sign --privkey-pem tmp/claveprivada.pem,tmp/certificado.pem --pwd ''$CLAVECERTIFICADO'' tmp/semilla.xml > tmp/semilla-firmada.xml
 #agregamos tags de request
 sed -i '1s|<\?|<pszXml xsi:type="xsd:string"><!\[CDATA\[<|' tmp/semilla-firmada.xml 
-sed -i '79s|<\/getToken>|<\/getToken>\]\]><\/pszXml>|' tmp/semilla-firmada.xml
+sed -i '73s|<\/getToken>|<\/getToken>\]\]><\/pszXml>|' tmp/semilla-firmada.xml
 #entramos al request y ponemos el xml
  sed -n "1,4p" rGetToken.xml > tmp/request-token.xml
  cat tmp/semilla-firmada.xml >> tmp/request-token.xml
