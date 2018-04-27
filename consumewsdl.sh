@@ -30,39 +30,39 @@ if [ -z $2 ]; then
 fi
 
 if [ -z $3 ]; then 
-URL_SEMILLA='https://palena.sii.cl/DTEWS/CrSeed.jws'
-URL_TOKEN='https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws'
+URL_SEMILLA='https://ws1.sii.cl/WSAUT/services/CrSeed'
+URL_TOKEN='https://ws1.sii.cl/WSAUT/services/GetTokenFromSeed'
 else
 SERVER=$3
  if [ "$SERVER" == "maullin" ]; then
 	URL_SEMILLA='https://maullin.sii.cl/DTEWS/CrSeed.jws'
 	URL_TOKEN='https://maullin.sii.cl/DTEWS/GetTokenFromSeed.jws'
  else
-	URL_SEMILLA='https://palena.sii.cl/DTEWS/CrSeed.jws'
-	URL_TOKEN='https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws'
+	URL_SEMILLA='https://ws1.sii.cl/WSAUT/services/CrSeed'
+	URL_TOKEN='https://ws1.sii.cl/WSAUT/services/GetTokenFromSeed'
  fi
 fi
-
 if [ ! -f "$RUTA_CERTIFICADO" ]; then
 	echo "Error:1 No existe archivo"
 	exit;
 fi
 
 # extraemos la clave privada 
-PKEY=$(openssl pkcs12 -in "$RUTA_CERTIFICADO" -out tmp/claveprivada.pem -nocerts -nodes -password pass:"$CLAVECERTIFICADO" 2>&1)
-if [ "$PKEY" != "MAC verified OK" ]; then
+openssl pkcs12 -in "$RUTA_CERTIFICADO" -out tmp/claveprivada.pem -nocerts -nodes -password pass:"$CLAVECERTIFICADO" 
+if [ $? != 0 ]; then
 	echo "Error:2 clave incorrecta del certificado";
 	exit;
 fi
 # extraemos el certificado
-CERT=$(openssl pkcs12 -in "$RUTA_CERTIFICADO" -out tmp/certificado.pem -nokeys -clcerts -password pass:''$CLAVECERTIFICADO''  2>&1)
-if [ "$CERT" != "MAC verified OK" ]; then
+#CERT=$(openssl pkcs12 -in "$RUTA_CERTIFICADO" -out tmp/certificado.pem -nokeys -clcerts -password pass:''$CLAVECERTIFICADO''  2>&1)
+openssl pkcs12 -in "$RUTA_CERTIFICADO" -out tmp/certificado.pem -nokeys -clcerts -password pass:''$CLAVECERTIFICADO'' 
+if [ $? != 0 ]; then
         echo "Error:3 clave incorrecta del certificado";
         exit;
 fi
 
 #llamadas al servicio de semilla
-curl -s -X POST -H 'Content-Type: text/xml;charset=UTF-8' --data-binary @"${SOAPFILE_SEED}" -H "${SOAPAction_SEMILLA}"  ${URL_SEMILLA} | recode html..ascii > tmp/response-semilla.xml
+curl -s -X POST -H 'Content-Type: text/xml;charset=UTF-8' --data-binary @"${SOAPFILE_SEED}" -H "${SOAPAction_SEMILLA}"  ${URL_SEMILLA} --insecure | recode html..ascii > tmp/response-semilla.xml
 SEMILLA=$(cat tmp/response-semilla.xml  | grep -Po '(?<=<SEMILLA>)([^</SEMILLA>]*)')
 if [ "$SEMILLA" == "" ]; then
         echo "Error:4 No existe semilla,favor verifique su acceso al WSDL CrSeed.jws";
@@ -80,7 +80,7 @@ sed -i '$s|.*|<\/getToken>\]\]><\/pszXml>|' tmp/semilla-firmada.xml
  cat tmp/semilla-firmada.xml >> tmp/request-token.xml
  sed -n "6,8p" rGetToken.xml >> tmp/request-token.xml
 #llamamos el wsdl para obtener el token
-curl -s -X POST -H 'Content-Type: text/xml;charset=UTF-8' --data-binary @tmp/request-token.xml  -H "${SOAPAction_TOKEN}"  ${URL_TOKEN} | recode html..ascii >  tmp/token-xml.xml
+curl -s -X POST -H 'Content-Type: text/xml;charset=UTF-8' --data-binary @tmp/request-token.xml  -H "${SOAPAction_TOKEN}"  ${URL_TOKEN} --insecure | recode html..ascii >  tmp/token-xml.xml
 
 ESTADO=$(cat tmp/token-xml.xml | grep -oP '(?<=<ESTADO>).*?(?=</ESTADO>)')
 if [ "$ESTADO" != "00" ]; then
