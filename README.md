@@ -10,13 +10,13 @@ Para poder utilizar el script es necesario contar con los siguientes paquetes
  - recode
  - xmlsec1 
  - openssl 
- ### Instalacion de dependencias en DEBIAN/UBUNTU 
+ #### Instalacion de dependencias en DEBIAN/UBUNTU 
  apt install curl recode xmlsec1 openssl 
  
- ### Instalacion de dependencias en GENTOO 
+ #### Instalacion de dependencias en GENTOO 
  emerge -av curl recode xmlsec1 openssl
  
- ### Instalación de dependencias en CentOS 
+ #### Instalación de dependencias en CentOS 
  yum install xmlsec1 xmlsec1-openssl recode curl openssl-libs
 
 #### Modo de uso
