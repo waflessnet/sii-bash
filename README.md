@@ -4,6 +4,20 @@ Este script bash permite autenticarse frente a los WDSL con el SII de chile medi
 #### Requisitos:
  - Debes poseer un certificado de digital, por lo menos simple, emitido por una entidad certificadora.
  - Linux
+#### Dependencias
+Para poder utilizar el script es necesario contar con los siguientes paquetes
+ - curl 
+ - recode
+ - xmlsec1 
+ - openssl 
+ ### Instalacion de dependencias en DEBIAN/UBUNTU 
+ apt install curl recode xmlsec1 openssl 
+ 
+ ### Instalacion de dependencias en GENTOO 
+ emerge -av curl recode xmlsec1 openssl
+ 
+ ### Instalación de dependencias en CentOS 
+ yum install xmlsec1 xmlsec1-openssl recode curl openssl-libs
 
 #### Modo de uso
    
